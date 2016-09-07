@@ -1,0 +1,8 @@
+[package]
+name = "gamepad"
+version = "0.1.0"
+authors = ["c"]
+
+[dependencies]
+gilrs = "0.2"
+piston_window = "0.44"
