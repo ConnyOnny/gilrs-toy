@@ -1,5 +1,6 @@
 extern crate gilrs;
 extern crate piston_window;
+extern crate rand;
 
 use piston_window::*;
 
@@ -60,16 +61,22 @@ fn apply_deadzone(dead : f64, mut value : f64) -> f64 {
     }
 }
 
+fn get_player_count(g : &gilrs::Gilrs) -> usize {
+    let mut i=0;
+    while g.connected_gamepad(i).is_some() {
+        i+=1;
+    }
+    i
+}
+
 fn main() {
     let window_size = (800,600);
     let deadzone = 0.2;
-    let mut players = vec![
-        Player::new((200.,200.),0,deadzone,[0.,0.,1.,1.]),
-        Player::new((500.,300.),1,deadzone,[1.,0.,0.,1.]),
-    ];
     let mut gilrs_obj = gilrs::Gilrs::new();
-    assert!(gilrs_obj.connected_gamepad(0).is_some());
-    assert!(gilrs_obj.connected_gamepad(1).is_some());
+    let mut players = Vec::new();
+    for i in 0..get_player_count(&gilrs_obj) {
+        players.push(Player::new((100.,100.), i, deadzone, [1.0,0.,0.,1.0]));
+    }
     let mut window: PistonWindow =
         WindowSettings::new("Awesome Game", [window_size.0, window_size.1])
         .exit_on_esc(true).build().unwrap();

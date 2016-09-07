@@ -6,3 +6,4 @@ authors = ["c"]
 [dependencies]
 gilrs = "0.2"
 piston_window = "0.44"
+rand = "0.3"
