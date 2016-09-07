@@ -18,7 +18,6 @@ impl Player {
     }
     fn render(&self, e : &Event, w : &mut PistonWindow) {
         w.draw_2d(e, |c, g| {
-            clear([1.0; 4], g);
             rectangle(self.color,
                       [0.0, 0.0, 10.0, 10.0],
                       c.transform.trans(self.position.0,self.position.1), g);
@@ -41,13 +40,21 @@ fn apply_deadzone(dead : f64, mut value : f64) -> f64 {
 fn main() {
     let window_size = (800,600);
     let deadzone = 0.2;
-    let mut players = vec![Player{position:(0.,0.),gamepad_id:0,deadzone:deadzone,color:[0.,0.,1.,1.]}];
+    let mut players = vec![
+        Player{position:(200.,200.),gamepad_id:0,deadzone:deadzone,color:[0.,0.,1.,1.]},
+        Player{position:(500.,300.),gamepad_id:1,deadzone:deadzone,color:[1.,0.,0.,1.]},
+    ];
     let mut gilrs_obj = gilrs::Gilrs::new();
+    assert!(gilrs_obj.connected_gamepad(0).is_some());
+    assert!(gilrs_obj.connected_gamepad(1).is_some());
     let mut window: PistonWindow =
-        WindowSettings::new("Hello Piston!", [window_size.0, window_size.1])
+        WindowSettings::new("Awesome Game", [window_size.0, window_size.1])
         .exit_on_esc(true).build().unwrap();
     while let Some(e) = window.next() {
         for _ in gilrs_obj.poll_events() {}
+        window.draw_2d(&e, |_, g| {
+            clear([1.0; 4], g);
+        });
         for p in players.iter_mut() {
             p.control(&gilrs_obj);
             p.render(&e, &mut window);
