@@ -82,9 +82,12 @@ fn main() {
         .exit_on_esc(true).build().unwrap();
     while let Some(e) = window.next() {
         for _ in gilrs_obj.poll_events() {}
+        if gilrs_obj.gamepad(0).state().btn_east {
+
         window.draw_2d(&e, |_, g| {
             clear([1.0; 4], g);
-        });
+	        });
+	}
         for p in players.iter_mut() {
             p.control(&gilrs_obj);
             p.render(&e, &mut window);
